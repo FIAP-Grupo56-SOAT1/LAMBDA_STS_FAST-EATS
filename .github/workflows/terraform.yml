@@ -23,7 +23,7 @@ jobs:
         uses: actions/download-artifact@v3.0.2
 
         with:
-          name: lambda-jar
+          name: lambda_sts-jar
           path: ./app/target/
 
       - name: Configure AWS Credentials

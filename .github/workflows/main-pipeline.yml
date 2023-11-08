@@ -29,8 +29,8 @@ jobs:
       - name: Upload Lambda JAR
         uses: actions/upload-artifact@v3
         with:
-          name: lambda-jar
-          path: ./app/target/lambda_authorizer-1.0.0.jar
+          name: lambda_sts-jar
+          path: ./app/target/lambda_sts-1.0.0.jar
 
   terraform:
     needs: [build]
