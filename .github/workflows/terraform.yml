@@ -1,0 +1,52 @@
+name: 'Terraform'
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  terraform:
+    name: 'Terraform'
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v3.0.2
+
+        with:
+          name: lambda_sts-jar
+          path: ./app/target/
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: us-east-1
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3.0.0
+
+      - name: Terraform Init
+        run: |
+          cd ./infra
+          terraform init
+
+      - name: Terraform Plan
+        run: |
+          cd ./infra
+          terraform plan -input=false
+
+      - name: Terraform Apply
+        run: |
+          cd ./infra
+          terraform apply -auto-approve
