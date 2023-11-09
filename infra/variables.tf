@@ -78,4 +78,10 @@ variable "password_cognito" {
   default     = ""
 }
 
+variable "nlb" {
+  description = "nlb"
+  type        = string
+  default = "http://ecs-fasteats-299429471.us-east-1.elb.amazonaws.com:8080"
+}
+
 

@@ -2,6 +2,7 @@ package br.com.fiap.festeat.sts;
 
 import br.com.fiap.festeat.sts.request.ClienteRequest;
 import br.com.fiap.festeat.sts.request.UserLoginRequestPayload;
+import br.com.fiap.festeat.sts.response.ClienteResponse;
 import br.com.fiap.festeat.sts.response.UserLoginResponsePayload;
 import br.com.fiap.festeat.sts.service.AutenticarService;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
@@ -12,8 +13,14 @@ import com.amazonaws.services.cognitoidp.model.*;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 
-import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -29,8 +36,12 @@ public class AutenticarHandler implements RequestHandler<ClienteRequest, String>
     private final String secretKey = System.getenv("SECRET_KEY");
     private final String userCognito = System.getenv("USER_COGNITO");
     private final String passwordCognito = System.getenv("PASSWORD_COGNITO");
+
+    private final String nlb = System.getenv("NLB_API");
     private final ObjectMapper mapper = new ObjectMapper();
     private final AutenticarService autenticar = new AutenticarService();
+
+    private final CloseableHttpClient httpClient = HttpClients.createDefault();
 
     @Override
     public String handleRequest(ClienteRequest cliente, Context context) {
@@ -41,10 +52,10 @@ public class AutenticarHandler implements RequestHandler<ClienteRequest, String>
                 return "CPF INVALIDO";
             }
 
-            if (validarClienteCadastrado(cliente)) {
+            if (validarCadastroCliente(cliente)) {
                 UserLoginResponsePayload userLoginResponsePayload = gerarToken();
 
-                return mapper.writeValueAsString(userLoginResponsePayload);
+                return userLoginResponsePayload.getAccessToken();
             } else {
                 return "CPF NAO CADASTRADO";
             }
@@ -54,70 +65,6 @@ public class AutenticarHandler implements RequestHandler<ClienteRequest, String>
         }
     }
 
-    private boolean validarClienteCadastrado(ClienteRequest cliente) {
-        // UPDATE the HOST string to match your RDS endpoint
-        String HOST = System.getenv("containerDbServer");
-        String DB_NAME = System.getenv("containerDbName");
-        String DB_PORTA = System.getenv("containerDbPort");
-        String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-        String DB_URL = String.format("jdbc:mysql://%s:%s/%s", HOST,DB_PORTA,DB_NAME);
-        String USER = System.getenv("containerDbUser");;
-        String SECRET_NAME = System.getenv("containerDbServer");;
-        String PASSWORD_DB = System.getenv("containerDbPassword");;
-        logger.info("URL_DB:"+DB_URL);
-
-        try {
-
-            Class.forName(JDBC_DRIVER);
-            Connection connection = DriverManager.getConnection(DB_URL,USER,PASSWORD_DB);
-            Statement statement = null;
-            ResultSet resultSet = null;
-            String cpf = "";
-            String nome = "";
-            String email = "";
-
-            // Run a simple query to test the connection
-            try (Statement stmt = connection.createStatement(); ) {
-                try( ResultSet rs = stmt.executeQuery("SELECT * FROM clientes C WHERE C.cpf = '"
-                        +cliente.getCpf() + "'")) {
-                    logger.info("resultset:"+rs.toString());
-                    while(rs.next()) {
-                        cpf = rs.getString("cpf");
-                        nome = rs.getString("nome");
-                        email = rs.getString("email");
-                    }
-                    resultSet = rs;
-                    statement =  stmt;
-                } catch(Exception e) {
-                    logger.info(e.getMessage()+e.getCause());
-                }
-            } catch (Exception e) {
-                logger.info(e.getMessage()+e.getCause());
-
-            }finally {
-                if (resultSet != null) {
-                    resultSet.close();
-                }
-                if (statement != null) {
-                    statement.close();
-                }
-                if (connection != null) {
-                    connection.close();
-                }
-            }
-            logger.info("DADOS DA CONSULTA: cpf:"+cpf+" nome:"+nome+" email:"+email);
-            if(cpf.isEmpty()){
-                return false;
-            }
-            logger.info("Cliente encontrado na base, segue para gerar token: cpf"+
-                    cpf+" nome:"+nome+" email:"+email);
-            return true;
-        } catch (Exception exception) {
-            logger.info(exception.getMessage() + exception.getCause());
-            return false;
-        }
-
-    }
 
     public UserLoginResponsePayload gerarToken() throws Exception {
         UserLoginRequestPayload userLoginRequestPayload = new UserLoginRequestPayload(userCognito, passwordCognito);
@@ -197,5 +144,37 @@ public class AutenticarHandler implements RequestHandler<ClienteRequest, String>
             throw new Exception(e.getMessage());
         }
 
+    }
+
+    private boolean validarCadastroCliente(ClienteRequest cliente) throws Exception {
+        String rotaClientes = "/clientes/"+cliente.getCpf();
+        HttpGet request = new HttpGet(nlb+rotaClientes);
+
+        try (CloseableHttpResponse response = httpClient.execute(request)) {
+
+            // Get HttpResponse Status
+            System.out.println(response.getStatusLine().toString());
+
+            HttpEntity entity = response.getEntity();
+            Header headers = entity.getContentType();
+            logger.info("Headers retorno:"+headers.toString());
+
+            try {
+                String result = EntityUtils.toString(entity);
+                logger.info("Resultado consulta GET:"+result);
+                ClienteResponse clienteResponse = mapper.readValue(result, ClienteResponse.class);
+                if (!clienteResponse.getCpf().isEmpty()){
+                    return true;
+                }
+
+            }catch (Exception exception){
+                logger.info(" ERRO AO CONSULTAR CLIENTE: "+exception.getMessage() + exception.getCause());
+            }
+
+
+
+        }
+
+        return false;
     }
 }
