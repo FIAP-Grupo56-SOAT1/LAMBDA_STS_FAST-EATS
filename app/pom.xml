@@ -20,6 +20,13 @@
 	</properties>
 
 	<dependencies>
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5.13</version>
+		</dependency>
+
 		<dependency>
 			<groupId>com.amazonaws</groupId>
 			<artifactId>aws-lambda-java-events</artifactId>
@@ -64,11 +71,6 @@
 			<groupId>com.amazonaws</groupId>
 			<artifactId>aws-java-sdk-cognitoidp</artifactId>
 			<version>1.11.1019</version>
-		</dependency>
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.33</version>
 		</dependency>
 	</dependencies>
 

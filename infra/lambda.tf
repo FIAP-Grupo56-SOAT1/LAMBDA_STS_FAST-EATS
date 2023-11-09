@@ -32,6 +32,7 @@ resource "aws_lambda_function" "lambda_sts" {
       containerDbRootPassword : jsondecode(data.aws_secretsmanager_secret_version.mysql_credentials.secret_string)["password"]
       containerDbServer : jsondecode(data.aws_secretsmanager_secret_version.mysql_credentials.secret_string)["host"]
       containerDbPort : jsondecode(data.aws_secretsmanager_secret_version.mysql_credentials.secret_string)["port"]
+      NLB_API : var.nlb
     }
   }
 
