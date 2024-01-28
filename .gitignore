@@ -3,3 +3,5 @@
 /infra/.terraform.lock.hcl
 /infra/plan.out
 /app/target/
+/app/lambda_sts.iml
+/terraform.tfstate
