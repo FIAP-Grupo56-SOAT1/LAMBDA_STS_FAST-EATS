@@ -23,6 +23,7 @@ resource "aws_lambda_function" "lambda_sts" {
       ACCESS_KEY : jsondecode(data.aws_secretsmanager_secret_version.credentials_sts.secret_string)["access_key"]
       SECRET_KEY : jsondecode(data.aws_secretsmanager_secret_version.credentials_sts.secret_string)["secret_key"]
       USER_COGNITO : jsondecode(data.aws_secretsmanager_secret_version.credentials_sts.secret_string)["user_cognito"]
+      SESSION_TOKEN : jsondecode(data.aws_secretsmanager_secret_version.credentials_sts.secret_string)["session_token"]
       PASSWORD_COGNITO : jsondecode(data.aws_secretsmanager_secret_version.credentials_sts.secret_string)["password_cognito"]
       NLB_API : jsondecode(data.aws_secretsmanager_secret_version.credentials_pagamento.secret_string)["url_pedido_service"]
 
