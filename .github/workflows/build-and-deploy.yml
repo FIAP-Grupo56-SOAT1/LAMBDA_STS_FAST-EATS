@@ -1,4 +1,4 @@
-name: main-pipeline
+name: Compilar e fazer deploy em producao
 
 on:
   pull_request:
@@ -35,5 +35,5 @@ jobs:
   terraform:
     needs: [build]
     if: github.event.pull_request.merged == true
-    uses: ./.github/workflows/terraform.yml
+    uses: ./.github/workflows/deploy-producao.yml
     secrets: inherit
