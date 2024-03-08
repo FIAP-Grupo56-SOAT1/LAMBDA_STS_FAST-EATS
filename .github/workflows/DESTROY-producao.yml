@@ -1,7 +1,14 @@
-name: Preparar destroy
-
+name: 'DESTROY infra producao'
 on:
   workflow_dispatch:
+    inputs:
+      env:
+        description: 'Environment'
+        required: true
+        default: 'prod'
+
+permissions:
+  contents: read
 
 jobs:
   build:
@@ -65,7 +72,7 @@ jobs:
       - name: Terraform Init
         run: |
           cd ./infra
-          terraform init
+          terraform init -reconfigure
 
       - name: Terraform Plan
         run: |
@@ -75,4 +82,4 @@ jobs:
       - name: Terraform Apply
         run: |
           cd ./infra
-          terraform apply -auto-approve    
+          terraform destroy -auto-approve    
