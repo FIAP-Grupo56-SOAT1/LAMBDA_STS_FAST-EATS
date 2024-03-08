@@ -7,6 +7,7 @@ import br.com.fiap.festeat.sts.response.UserLoginResponsePayload;
 import br.com.fiap.festeat.sts.service.AutenticarService;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.auth.BasicSessionCredentials;
 import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProvider;
 import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProviderClientBuilder;
 import com.amazonaws.services.cognitoidp.model.*;
@@ -38,6 +39,7 @@ public class AutenticarHandler implements RequestHandler<ClienteRequest, String>
     private final String passwordCognito = System.getenv("PASSWORD_COGNITO");
 
     private final String nlb = System.getenv("NLB_API");
+    private final String sessionToken = System.getenv("SESSION_TOKEN");
     private final ObjectMapper mapper = new ObjectMapper();
     private final AutenticarService autenticar = new AutenticarService();
 
@@ -68,7 +70,8 @@ public class AutenticarHandler implements RequestHandler<ClienteRequest, String>
 
     public UserLoginResponsePayload gerarToken() throws Exception {
         UserLoginRequestPayload userLoginRequestPayload = new UserLoginRequestPayload(userCognito, passwordCognito);
-        BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, secretKey);
+        //BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, secretKey);
+        BasicSessionCredentials awsCreds = new BasicSessionCredentials(accessKey, secretKey, sessionToken);
 
         AWSCognitoIdentityProvider cognitoClient = AWSCognitoIdentityProviderClientBuilder.standard()
                 .withCredentials(new AWSStaticCredentialsProvider(awsCreds)).withRegion(region).build();
@@ -82,6 +85,7 @@ public class AutenticarHandler implements RequestHandler<ClienteRequest, String>
         final AdminInitiateAuthRequest authRequest = new AdminInitiateAuthRequest();
         authRequest.withAuthFlow(AuthFlowType.ADMIN_USER_PASSWORD_AUTH).withClientId(clientId)
                 .withUserPoolId(userPoolId).withAuthParameters(authParams);
+        logger.info("DADOS PARA REQUEST: "+authRequest.toString());
 
         try {
 

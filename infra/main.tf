@@ -7,7 +7,7 @@ terraform {
     }
   }
   backend "s3" {
-    bucket = "bucket-fiap-soat1-grupo56-remote-state"
+    bucket = "bucket-fiap56-to-remote-state"
     key    = "aws-lambda-sts-soat1-grupo56/terraform.tfstate"
     region = "us-east-1"
   }

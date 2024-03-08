@@ -27,6 +27,12 @@ variable "lambda_handler" {
   default     = "br.com.fiap.festeat.sts.AutenticarHandler::handleRequest"
 }
 
+######### OBS: a execution role acima foi trocada por LabRole devido a restricoes de permissao na conta da AWS Academy ########
+variable "lab_role_arn" {
+  type    = string
+  default = "arn:aws:iam::730335661438:role/LabRole" #aws_iam_role.ecsTaskExecutionRole.arn
+}
+
 variable "timeout" {
   description = "code version"
   type        = number
@@ -78,10 +84,5 @@ variable "password_cognito" {
   default     = ""
 }
 
-variable "nlb" {
-  description = "nlb"
-  type        = string
-  default = "http://ecs-fasteats-919425977.us-east-1.elb.amazonaws.com:8080"
-}
 
 
