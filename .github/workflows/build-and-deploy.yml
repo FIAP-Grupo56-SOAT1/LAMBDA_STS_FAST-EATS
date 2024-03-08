@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    name: 'gerarndo artefato para deploy'
+    name: 'gerando artefato'
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
