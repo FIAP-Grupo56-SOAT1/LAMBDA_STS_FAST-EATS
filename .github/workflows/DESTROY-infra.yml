@@ -36,6 +36,7 @@ jobs:
 
       - name: Terraform Init
         run: |
+          mkdir -p ./app/target/
           touch ./app/target/lambda_sts-jar
           cd ./infra/
           terraform init -reconfigure
