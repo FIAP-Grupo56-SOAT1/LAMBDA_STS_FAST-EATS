@@ -85,6 +85,7 @@ public class AutenticarHandler implements RequestHandler<ClienteRequest, String>
         final AdminInitiateAuthRequest authRequest = new AdminInitiateAuthRequest();
         authRequest.withAuthFlow(AuthFlowType.ADMIN_USER_PASSWORD_AUTH).withClientId(clientId)
                 .withUserPoolId(userPoolId).withAuthParameters(authParams);
+        logger.info("DADOS PARA REQUEST: "+authRequest.toString());
 
         try {
 
