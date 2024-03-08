@@ -1,18 +1,13 @@
-name: 'DESTROY infra producao'
+name: 'destroy infra producao'
 on:
-  workflow_dispatch:
-    inputs:
-      env:
-        description: 'Environment'
-        required: true
-        default: 'prod'
+  workflow_call:
 
 permissions:
   contents: read
 
 jobs:
   terraform:
-    name: 'DESTROY producao'
+    name: 'destroy producao'
     runs-on: ubuntu-latest
 
     defaults:
