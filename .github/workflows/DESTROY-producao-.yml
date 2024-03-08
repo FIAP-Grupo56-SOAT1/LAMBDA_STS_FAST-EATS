@@ -2,16 +2,10 @@ name: Preparar destroy
 
 on:
   workflow_dispatch:
-    inputs:
-      env:
-        description: 'Environment'
-        required: true
-        default: 'prod'
 
 jobs:
   build:
     name: "preparando destroy"
-    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     steps:
@@ -39,5 +33,5 @@ jobs:
   terraform:
     needs: [build]
     if: github.event.pull_request.merged == true
-    uses: ./.github/workflows/destroy.yml
+    uses: ./.github/workflows/finaliza-destroy.yml
     secrets: inherit
