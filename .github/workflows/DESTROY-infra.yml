@@ -23,6 +23,31 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build with Maven
+        run: |
+          cd ./app
+          mvn -B clean package -DskipTests
+
+      - name: Upload Lambda JAR
+        uses: actions/upload-artifact@v3
+        with:
+          name: lambda_sts-jar
+          path: ./app/target/lambda_sts-1.0.0.jar
+
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v3.0.2
+
+        with:
+          name: lambda_sts-jar
+          path: ./app/target/
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -36,8 +61,6 @@ jobs:
 
       - name: Terraform Init
         run: |
-          mkdir -p ./app/target/
-          touch ./app/target/lambda_sts-jar
           cd ./infra/
           terraform init -reconfigure
 
