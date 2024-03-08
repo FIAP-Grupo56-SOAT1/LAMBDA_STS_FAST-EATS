@@ -4,7 +4,7 @@ locals {
 
 resource "aws_cloudwatch_log_group" "lambda_log_group" {
   name              = "/aws/lambda/${aws_lambda_function.lambda_sts.function_name}"
-  retention_in_days = 2
+  retention_in_days = 1
   lifecycle {
     prevent_destroy = false
   }
