@@ -2,7 +2,13 @@ locals {
   lambda_payload_filename = "../app/target/${var.lambda_function_name}-${var.version_lambda}.jar"
 }
 
-
+resource "aws_cloudwatch_log_group" "lambda_log_group" {
+  name              = "/aws/lambda/${aws_lambda_function.lambda_sts.function_name}"
+  retention_in_days = 2
+  lifecycle {
+    prevent_destroy = false
+  }
+}
 
 resource "aws_lambda_function" "lambda_sts" {
   function_name = var.lambda_function_name
@@ -20,20 +26,9 @@ resource "aws_lambda_function" "lambda_sts" {
     variables = {
       USER_POOL_ID : jsondecode(data.aws_secretsmanager_secret_version.credentials_sts.secret_string)["userPoolId"]
       CLIENTE_ID : jsondecode(data.aws_secretsmanager_secret_version.credentials_sts.secret_string)["client_id"]
-      ACCESS_KEY : jsondecode(data.aws_secretsmanager_secret_version.credentials_sts.secret_string)["access_key"]
-      SECRET_KEY : jsondecode(data.aws_secretsmanager_secret_version.credentials_sts.secret_string)["secret_key"]
       USER_COGNITO : jsondecode(data.aws_secretsmanager_secret_version.credentials_sts.secret_string)["user_cognito"]
-      SESSION_TOKEN : jsondecode(data.aws_secretsmanager_secret_version.credentials_sts.secret_string)["session_token"]
       PASSWORD_COGNITO : jsondecode(data.aws_secretsmanager_secret_version.credentials_sts.secret_string)["password_cognito"]
       NLB_API : jsondecode(data.aws_secretsmanager_secret_version.credentials_pagamento.secret_string)["url_pedido_service"]
-
-      containerDbName : jsondecode(data.aws_secretsmanager_secret_version.credentials_pedido.secret_string)["dbname"]
-      containerDbUser : jsondecode(data.aws_secretsmanager_secret_version.credentials_pedido.secret_string)["username"]
-      containerDbPassword : jsondecode(data.aws_secretsmanager_secret_version.credentials_pedido.secret_string)["password"]
-      containerDbRootPassword : jsondecode(data.aws_secretsmanager_secret_version.credentials_pedido.secret_string)["password"]
-      containerDbServer : jsondecode(data.aws_secretsmanager_secret_version.credentials_pedido.secret_string)["host"]
-      containerDbPort : jsondecode(data.aws_secretsmanager_secret_version.credentials_pedido.secret_string)["port"]
-
     }
   }
 

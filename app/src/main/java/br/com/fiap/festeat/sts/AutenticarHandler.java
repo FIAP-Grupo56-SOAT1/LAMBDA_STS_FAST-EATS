@@ -33,13 +33,13 @@ public class AutenticarHandler implements RequestHandler<ClienteRequest, String>
     private final String userPoolId = System.getenv("USER_POOL_ID");
     private final String clientId = System.getenv("CLIENTE_ID");
     private final String region = System.getenv("AWS_REGION");
-    private final String accessKey = System.getenv("ACCESS_KEY");
-    private final String secretKey = System.getenv("SECRET_KEY");
+    private final String accessKey = System.getenv("AWS_ACCESS_KEY_ID");
+    private final String secretKey = System.getenv("AWS_SECRET_ACCESS_KEY");
     private final String userCognito = System.getenv("USER_COGNITO");
     private final String passwordCognito = System.getenv("PASSWORD_COGNITO");
 
     private final String nlb = System.getenv("NLB_API");
-    private final String sessionToken = System.getenv("SESSION_TOKEN");
+    private final String sessionToken = System.getenv("AWS_SESSION_TOKEN");
     private final ObjectMapper mapper = new ObjectMapper();
     private final AutenticarService autenticar = new AutenticarService();
 
@@ -47,9 +47,6 @@ public class AutenticarHandler implements RequestHandler<ClienteRequest, String>
 
     @Override
     public String handleRequest(ClienteRequest cliente, Context context) {
-        logger.info("AWS_ACCESS_KEY_ID: "+System.getenv("AWS_ACCESS_KEY_ID") );
-        logger.info("AWS_SECRET_ACCESS_KEY: "+System.getenv("AWS_SECRET_ACCESS_KEY") );
-        logger.info("AWS_SESSION_TOKEN: "+System.getenv("AWS_SESSION_TOKEN") );
         logger.info("entrou no metodo handler:" + cliente.toString());
         try {
 
