@@ -18,7 +18,7 @@ resource "aws_lambda_function" "lambda_sts" {
 
   environment {
     variables = {
-      USER_POOL_ID : var.user_pool_id
+      USER_POOL_ID : jsondecode(data.aws_secretsmanager_secret_version.credentials_sts.secret_string)["userPoolId"]
       CLIENTE_ID : jsondecode(data.aws_secretsmanager_secret_version.credentials_sts.secret_string)["client_id"]
       ACCESS_KEY : jsondecode(data.aws_secretsmanager_secret_version.credentials_sts.secret_string)["access_key"]
       SECRET_KEY : jsondecode(data.aws_secretsmanager_secret_version.credentials_sts.secret_string)["secret_key"]

@@ -51,11 +51,6 @@ variable "version_lambda" {
   default     = "1.0.0"
 }
 
-variable "user_pool_id" {
-  description = "user_pool_id"
-  type        = string
-  default     = "us-east-1_l3fytM5Hz"
-}
 
 variable "client_id" {
   description = "client_id"
