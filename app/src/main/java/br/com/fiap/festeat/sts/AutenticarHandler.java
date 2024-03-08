@@ -47,6 +47,9 @@ public class AutenticarHandler implements RequestHandler<ClienteRequest, String>
 
     @Override
     public String handleRequest(ClienteRequest cliente, Context context) {
+        logger.info("AWS_ACCESS_KEY_ID: "+System.getenv("AWS_ACCESS_KEY_ID") );
+        logger.info("AWS_SECRET_ACCESS_KEY: "+System.getenv("AWS_SECRET_ACCESS_KEY") );
+        logger.info("AWS_SESSION_TOKEN: "+System.getenv("AWS_SESSION_TOKEN") );
         logger.info("entrou no metodo handler:" + cliente.toString());
         try {
 
