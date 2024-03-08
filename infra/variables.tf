@@ -58,16 +58,6 @@ variable "client_id" {
   default     = ""
 }
 
-variable "access_key" {
-  description = "access_key"
-  type        = string
-  default     = ""
-}
-variable "secret_key" {
-  description = "secret_key"
-  type        = string
-  default     = ""
-}
 variable "user_cognito" {
   description = "user_cognito"
   type        = string
