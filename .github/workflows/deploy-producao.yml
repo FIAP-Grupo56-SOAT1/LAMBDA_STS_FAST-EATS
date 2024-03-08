@@ -8,7 +8,7 @@ permissions:
 
 jobs:
   terraform:
-    name: 'Terraform'
+    name: 'deploy em producao'
     runs-on: ubuntu-latest
 
     defaults:
