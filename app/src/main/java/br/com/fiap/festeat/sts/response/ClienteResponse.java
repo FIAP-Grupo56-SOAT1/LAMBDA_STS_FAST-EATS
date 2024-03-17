@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ClienteResponse {
+
+    private Long id;
     private String cpf;
 
     private String primeiroNome;
@@ -14,6 +16,14 @@ public class ClienteResponse {
     private String email;
 
     private Boolean ativo;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getCpf() {
         return cpf;
