@@ -1,7 +1,7 @@
 # LAMBDA STS Java
 Repositório dedicado ao código e infraestrutura da AWS LAMBDA criada para geração de tokens da aplicação FAST-EATS
 
-![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/FIAP-Grupo56-SOAT1/API_JAVA_FAST-EATS/main-pipeline.yml?logo=github)
+![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/FIAP-Grupo56-SOAT1/LAMBDA_STS_FAST-EATS/deploy-producao.yml?logo=github)
 
 [![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/summary/new_code?id=FIAP-Grupo56-SOAT1_LAMBDA_STS_FAST-EATS)
 
